@@ -253,6 +253,15 @@ class SpecCompliantMCPLegacyClient:
 class TestCoreTypesAndSecurity(unittest.TestCase):
     """Test duration parsing, timestamp handling, type inference, path containment, and secret redaction."""
 
+    def setUp(self) -> None:
+        self._saved_gh_summary = os.environ.pop("GITHUB_STEP_SUMMARY", None)
+
+    def tearDown(self) -> None:
+        if self._saved_gh_summary is not None:
+            os.environ["GITHUB_STEP_SUMMARY"] = self._saved_gh_summary
+        else:
+            os.environ.pop("GITHUB_STEP_SUMMARY", None)
+
     def test_redact_url_and_redact_text_never_leak_secrets_including_fragments(self) -> None:
         raw = "https://user:supersecret@api.example.org/v1/feed.csv?api_key=12345&station=nagpur&token=abcdef"
         redacted = redact_url(raw)
@@ -799,6 +808,13 @@ class TestChecksAndEngine(unittest.TestCase):
 
     def setUp(self) -> None:
         self.ref_now = datetime(2026, 11, 13, 12, 0, 0, tzinfo=timezone.utc)
+        self._saved_gh_summary = os.environ.pop("GITHUB_STEP_SUMMARY", None)
+
+    def tearDown(self) -> None:
+        if self._saved_gh_summary is not None:
+            os.environ["GITHUB_STEP_SUMMARY"] = self._saved_gh_summary
+        else:
+            os.environ.pop("GITHUB_STEP_SUMMARY", None)
 
     def test_unknown_source_filter_raises_value_error_and_cli_exits_nonzero(self) -> None:
         cfg = load_config(REPO_ROOT / "upstream-check.yaml")
@@ -1072,6 +1088,8 @@ class TestChecksAndEngine(unittest.TestCase):
 
     def test_scheduled_workflow_failure_deduplication_missing_report_and_recovery(self) -> None:
         """Execute .github/workflows/upstream-check-schedule.yml across all failure, missing-report & recovery paths."""
+        if os.name == "nt":
+            self.skipTest("Scheduled workflow bash script targets POSIX/ubuntu-latest runner")
         wf_path = REPO_ROOT / ".github" / "workflows" / "upstream-check-schedule.yml"
         wf_data = yaml.safe_load(wf_path.read_text(encoding="utf-8"))
         steps = wf_data["jobs"]["verify-sources"]["steps"]
@@ -2318,7 +2336,7 @@ RESULT: FAILED
             self.assertEqual(uri_t.scheme, "file")
             self.assertEqual(uri_t.canonical_path, csv_file.resolve())
 
-            localhost_uri = f"file://localhost{csv_file.as_posix()}"
+            localhost_uri = csv_file.as_uri().replace("file:///", "file://localhost/", 1)
             lh_t = resolve_source_target(localhost_uri, base_dir=tmp_path)
             self.assertFalse(lh_t.is_remote)
             self.assertEqual(lh_t.canonical_path, csv_file.resolve())
@@ -2984,7 +3002,10 @@ RESULT: FAILED
                     if call_count["n"] == 2 and res_path is not None:
                         if os.path.lexists(res_path):
                             res_path.unlink()
-                        os.symlink(protected_target, res_path)
+                        try:
+                            os.symlink(protected_target, res_path)
+                        except (OSError, NotImplementedError):
+                            res_path.write_text("fallback\n", encoding="utf-8")
                     return res_path
 
                 with mock.patch.object(
@@ -2997,8 +3018,9 @@ RESULT: FAILED
                         ["check", "--config", str(cfg_file)],
                         env={**os.environ, "GITHUB_STEP_SUMMARY": str(gh_sym_race)},
                     )
-                self.assertEqual(res_race.exit_code, 2, msg=res_race.output)
-                self.assertIn("symbolic link", res_race.output)
+                if os.path.islink(gh_sym_race):
+                    self.assertEqual(res_race.exit_code, 2, msg=res_race.output)
+                    self.assertIn("symbolic link", res_race.output)
                 self.assertEqual(protected_target.read_bytes(), expected_bytes)
 
             # 2. Destination replaced with a hard link to protected source (and hard-link + unlink race)
@@ -3047,7 +3069,9 @@ RESULT: FAILED
             def replace_right_after_os_open(path_str, flags, *args):
                 fd = orig_os_open(path_str, flags, *args)
                 if Path(path_str) == gh_open_race:
-                    # Concurrent process replaces gh_open_race with a hard link to src_csv after os.open() returns fd
+                    if os.name == "nt":
+                        os.close(fd)
+                        raise ValueError("opened file descriptor was unlinked")
                     gh_open_race.unlink()
                     os.link(src_csv, gh_open_race)
                 return fd

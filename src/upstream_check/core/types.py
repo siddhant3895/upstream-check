@@ -153,12 +153,11 @@ def resolve_source_target(
         raise ValueError("Invalid source.url: contains null byte.")
 
     if WIN_DRIVE_PATH_RE.match(expanded) or expanded.startswith("\\\\"):
-        local_path = Path(expanded)
-        canonical_path = (
-            Path(os.path.abspath(str(local_path)))
-            if os.name == "nt"
-            else local_path
-        )
+        if os.name == "nt" and not expanded.startswith("\\\\"):
+            local_path, canonical_path = _normalize_local_filesystem_path(expanded, base_dir=base_dir)
+        else:
+            local_path = Path(expanded)
+            canonical_path = Path(os.path.abspath(str(local_path))) if os.name == "nt" else local_path
         return ResolvedSourceTarget(
             raw_url=raw_url,
             expanded_url=expanded,
@@ -208,9 +207,7 @@ def resolve_source_target(
                     "in file:// URIs (percent-encode literal '#' as '%23' and '?' as '%3F')."
                 )
             if parsed.netloc and parsed.netloc.lower() != "localhost":
-                if os.name == "nt":
-                    if ENCODED_SEP_OR_NULL_RE.search(parsed.path):
-                        raise ValueError(
+                raise ValueError(
                             "Invalid file URI: encoded path separators (%2F, %5C) or null bytes (%00) "
                             "are not permitted."
                         )
@@ -241,12 +238,11 @@ def resolve_source_target(
                 raise ValueError("Invalid file URI: decoded path contains null byte.")
             if WIN_DRIVE_URI_PATH_RE.match(decoded_path):
                 win_str = decoded_path[1:]
-                local_path = Path(win_str)
-                canonical_path = (
-                    Path(os.path.abspath(str(local_path)))
-                    if os.name == "nt"
-                    else local_path
-                )
+                if os.name == "nt":
+                    local_path, canonical_path = _normalize_local_filesystem_path(win_str, base_dir=base_dir)
+                else:
+                    local_path = Path(win_str)
+                    canonical_path = local_path
                 return ResolvedSourceTarget(
                     raw_url=raw_url,
                     expanded_url=expanded,
