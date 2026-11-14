@@ -1,0 +1,26 @@
+{
+  "status": "ok",
+  "data": [
+    {
+      "station_id": "IN-MH-002-01",
+      "city": "Nagpur",
+      "pm25": 44.2,
+      "pm10": 88.5,
+      "observed_at": "2026-11-13T10:30:00Z"
+    },
+    {
+      "station_id": "IN-DL-001-01",
+      "city": "New Delhi",
+      "pm25": 162.8,
+      "pm10": 245.0,
+      "observed_at": "2026-11-13T11:00:00Z"
+    },
+    {
+      "station_id": "IN-KA-004-01",
+      "city": "Bengaluru",
+      "pm25": 29.4,
+      "pm10": 58.1,
+      "observed_at": "2026-11-13T11:15:00Z"
+    }
+  ]
+}

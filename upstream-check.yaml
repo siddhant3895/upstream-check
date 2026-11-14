@@ -1,0 +1,29 @@
+version: 1
+
+sources:
+  - name: air-quality
+    url: examples/data/air_quality_healthy.csv
+    format: csv
+
+    freshness:
+      column: observed_at
+      max_age: 36h
+
+    schema:
+      baseline: baselines/air-quality.json
+
+    columns:
+      station_id:
+        required: true
+        type: string
+
+      pm25:
+        type: number
+        min: 0
+        max: 1000
+
+    quality:
+      max_null_pct: 10
+      unique:
+        - station_id
+        - observed_at

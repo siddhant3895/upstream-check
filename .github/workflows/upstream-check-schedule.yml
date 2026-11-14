@@ -1,0 +1,99 @@
+name: Scheduled Upstream Data Check
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  verify-sources:
+    name: Check Live External Data Sources
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Upstream Check
+        run: pip install --disable-pip-version-check .
+
+      - name: Run Upstream Check against Live Public Feed
+        id: check
+        continue-on-error: true
+        run: |
+          rm -f report.md check_stderr.log
+          upstream-check check \
+            --config examples/real-world/upstream-check.live.yaml \
+            --summary-file report.md 2> >(tee check_stderr.log >&2)
+
+      - name: Open or Deduplicate GitHub Issue on Upstream Failure
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if [ ! -s report.md ]; then
+            ERR_TEXT="Runner or process failure before report.md generation"
+            if [ -s check_stderr.log ]; then
+              ERR_TEXT=$(cat check_stderr.log)
+            fi
+            NORM_ERR=$(printf "%s" "$ERR_TEXT" | sed -E 's/(^|[^A-Za-z0-9_])[+-]?[0-9]+(\.[0-9]+)?%?/\\1<N>/g')
+            FINGERPRINT=$(printf "RUNNER_FAILURE:%s" "$NORM_ERR" | sha256sum | awk '{print $1}')
+            {
+              echo "## Upstream Check Report — EXECUTION ERROR"
+              echo ""
+              echo "- **Status**: \`Execution / Runner Failure\`"
+              echo "- **Configuration**: \`examples/real-world/upstream-check.live.yaml\`"
+              echo ""
+              echo "### Diagnostic Error"
+              echo ""
+              echo '```text'
+              printf "%s\n" "$ERR_TEXT"
+              echo '```'
+              echo ""
+              echo "**Result:** FAILED — Upstream Check exited before producing a diagnostic report."
+              echo ""
+              echo "<!-- upstream-check-fingerprint:${FINGERPRINT} -->"
+            } > report.md
+          fi
+          MARKER=$(grep -o '<!-- upstream-check-fingerprint:[a-f0-9]* -->' report.md | head -n 1 || true)
+          if [ -z "$MARKER" ]; then
+            FINGERPRINT=$(sha256sum report.md | awk '{print $1}')
+            MARKER="<!-- upstream-check-fingerprint:${FINGERPRINT} -->"
+            printf "\n%s\n" "$MARKER" >> report.md
+          fi
+          EXISTING=$(gh issue list --repo "$GH_REPO" --state open --search "Upstream Data Check Failed in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            ALL_BODIES=$(gh issue view "$EXISTING" --repo "$GH_REPO" --json body,comments --jq '([.body] + (.comments | map(.body))) | join("\n")')
+            if printf "%s" "$ALL_BODIES" | grep -qF "$MARKER"; then
+              echo "Unchanged incident fingerprint ($MARKER); skipping duplicate comment."
+            else
+              gh issue comment "$EXISTING" --repo "$GH_REPO" --body-file report.md
+            fi
+          else
+            gh issue create --repo "$GH_REPO" \
+              --title "🚨 Upstream Data Check Failed ($(date -u +'%Y-%m-%d %H:%M UTC'))" \
+              --body-file report.md
+          fi
+          exit 1
+
+      - name: Auto-Close Open Incident Issue on Recovery
+        if: steps.check.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          EXISTING=$(gh issue list --repo "$GH_REPO" --state open --search "Upstream Data Check Failed in:title" --json number --jq '.[0].number')
+          if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
+            gh issue close "$EXISTING" --repo "$GH_REPO" \
+              --comment "✅ Upstream data sources recovered and passed all checks at $(date -u +'%Y-%m-%d %H:%M UTC'). Closing incident."
+          fi

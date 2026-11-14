@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "upstream-check"
+version = "0.2.13"
+description = "External data reliability monitoring for developers. Catch broken upstream JSON APIs and CSV feeds before they break your application."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+  { name = "Siddhant" }
+]
+keywords = [
+  "data-quality",
+  "schema-drift",
+  "api-monitoring",
+  "csv",
+  "json",
+  "github-actions",
+  "mcp",
+  "reliability"
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Software Development :: Testing"
+]
+dependencies = [
+  "click>=8.1.0",
+  "httpx>=0.24.0",
+  "pydantic>=1.10.0,<3.0.0",
+  "PyYAML>=6.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0.0",
+  "ruff>=0.4.0"
+]
+
+[project.scripts]
+upstream-check = "upstream_check.cli.app:main"
+
+[project.urls]
+Homepage = "https://github.com/siddhant3895/upstream-check"
+Repository = "https://github.com/siddhant3895/upstream-check"
+Issues = "https://github.com/siddhant3895/upstream-check/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

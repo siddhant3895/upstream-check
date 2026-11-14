@@ -1,0 +1,91 @@
+# Live public feed you can test right now with zero API keys:
+# Run: upstream-check check --config examples/real-world/upstream-check.live.yaml
+#
+# All 30 standard USGS GeoJSON feature columns are profiled in
+# baselines/usgs-earthquakes-hourly.json. Optional fields that are frequently null
+# for routine minor earthquakes (felt, cdi, mmi, alert, tz, nst, dmin, rms, gap)
+# are marked required: false so 100% null batches on those fields do not false-fail,
+# while still checking their types whenever non-null values are present.
+version: 1
+
+sources:
+  - name: usgs-earthquakes-hourly
+    url: https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson
+    format: json
+    json_records_path: features
+    flatten_json: true
+
+    freshness:
+      column: properties.time
+      max_age: 6h
+
+    schema:
+      baseline: baselines/usgs-earthquakes-hourly.json
+      allow_extra_columns: true
+
+    columns:
+      id:
+        required: true
+        type: string
+        max_null_pct: 0
+      properties.mag:
+        required: true
+        type: number
+        min: -2.0
+        max: 10.0
+        max_null_pct: 5
+      properties.place:
+        required: true
+        type: string
+        max_null_pct: 5
+      properties.time:
+        required: true
+        type: integer
+        max_null_pct: 0
+      properties.tz:
+        required: false
+        type: number
+      properties.felt:
+        required: false
+        type: number
+      properties.cdi:
+        required: false
+        type: number
+      properties.mmi:
+        required: false
+        type: number
+      properties.alert:
+        required: false
+        type: string
+      properties.status:
+        required: false
+        type: string
+      properties.nst:
+        required: false
+        type: number
+      properties.dmin:
+        required: false
+        type: number
+      properties.rms:
+        required: false
+        type: number
+      properties.gap:
+        required: false
+        type: number
+      properties.magType:
+        required: false
+        type: string
+      properties.type:
+        required: false
+        type: string
+      geometry.type:
+        required: true
+        type: string
+        max_null_pct: 0
+
+    quality:
+      max_null_spike_pct: 100
+      max_row_drop_pct: 90
+      unique:
+        - id
+      min_rows: 1

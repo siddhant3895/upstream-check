@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 560" width="100%" height="100%">
+  <defs>
+    <style>
+      .bg { fill: #0d1117; rx: 10px; ry: 10px; stroke: #30363d; stroke-width: 1.5px; }
+      .header { fill: #161b22; }
+      .text { font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Consolas, monospace; font-size: 14px; fill: #c9d1d9; white-space: pre; }
+      .bold { font-weight: 700; fill: #f0f6fc; }
+      .dim { fill: #8b949e; }
+      .cyan { fill: #58a6ff; font-weight: 700; }
+      .green { fill: #3fb950; font-weight: 700; }
+      .red { fill: #f85149; font-weight: 700; }
+      .cmd { fill: #79c0ff; }
+    </style>
+  </defs>
+  <rect class="bg" x="2" y="2" width="816" height="556" rx="10" ry="10"/>
+  <path class="header" d="M 2 12 Q 2 2 12 2 L 808 2 Q 818 2 818 12 L 818 38 L 2 38 Z"/>
+  <circle cx="22" cy="20" r="6" fill="#ff5f56"/>
+  <circle cx="42" cy="20" r="6" fill="#ffbd2e"/>
+  <circle cx="62" cy="20" r="6" fill="#27c93f"/>
+  <text x="410" y="25" text-anchor="middle" class="text dim" font-size="12">upstream-check check</text>
+
+  <text x="28" y="70" class="text"><tspan class="green">➜</tspan> <tspan class="cmd">upstream-check check</tspan></text>
+  <text x="28" y="102" class="text bold">UPSTREAM CHECK</text>
+
+  <text x="28" y="132" class="text"><tspan class="bold">Source:</tspan> air-quality</text>
+  <text x="28" y="154" class="text"><tspan class="bold">Endpoint:</tspan> https://example.org/data.csv</text>
+
+  <text x="28" y="188" class="text cyan">SOURCE AVAILABILITY</text>
+  <text x="28" y="210" class="text">  <tspan class="green">✓</tspan> HTTP response received</text>
+
+  <text x="28" y="244" class="text cyan">SCHEMA VALIDATION</text>
+  <text x="28" y="266" class="text">  <tspan class="green">✓</tspan> Required columns present</text>
+  <text x="28" y="288" class="text">  <tspan class="red">✗ Column pm25 changed type</tspan></text>
+  <text x="28" y="310" class="text dim">    Expected: number</text>
+  <text x="28" y="332" class="text dim">    Received: string</text>
+
+  <text x="28" y="366" class="text cyan">DATA QUALITY</text>
+  <text x="28" y="388" class="text">  <tspan class="red">✗ Missing values: 42%</tspan></text>
+  <text x="28" y="410" class="text dim">    Previous baseline: 2%</text>
+
+  <text x="28" y="444" class="text cyan">FRESHNESS</text>
+  <text x="28" y="466" class="text">  <tspan class="red">✗ Data is 62 hours old</tspan></text>
+  <text x="28" y="488" class="text dim">    Maximum allowed: 36 hours</text>
+
+  <text x="28" y="516" class="text dim">--------------------------------</text>
+  <text x="28" y="536" class="text"><tspan class="red">RESULT: FAILED</tspan> — 3 findings require attention.</text>
+</svg>

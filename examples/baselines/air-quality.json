@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "source_name": "air-quality",
+  "endpoint": "https://example.org/data.csv",
+  "format": "csv",
+  "captured_at": "2026-11-13T09:00:00Z",
+  "row_count": 50,
+  "column_order": [
+    "station_id",
+    "city",
+    "pm25",
+    "pm10",
+    "observed_at"
+  ],
+  "columns": {
+    "station_id": {
+      "name": "station_id",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 50,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 50
+    },
+    "city": {
+      "name": "city",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 50,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 5
+    },
+    "pm25": {
+      "name": "pm25",
+      "inferred_type": "number",
+      "null_count": 1,
+      "total_count": 50,
+      "null_pct": 2.0,
+      "min_value": 38.5,
+      "max_value": 177.8,
+      "distinct_count": 49
+    },
+    "pm10": {
+      "name": "pm10",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 50,
+      "null_pct": 0.0,
+      "min_value": 72.0,
+      "max_value": 248.1,
+      "distinct_count": 50
+    },
+    "observed_at": {
+      "name": "observed_at",
+      "inferred_type": "datetime",
+      "null_count": 0,
+      "total_count": 50,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 50
+    }
+  }
+}

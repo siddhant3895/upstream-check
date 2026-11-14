@@ -1,0 +1,342 @@
+{
+  "version": 1,
+  "source_name": "usgs-earthquakes-hourly",
+  "endpoint": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_hour.geojson",
+  "format": "json",
+  "captured_at": "2026-11-13T12:00:00Z",
+  "row_count": 7,
+  "column_order": [
+    "type",
+    "id",
+    "properties.mag",
+    "properties.place",
+    "properties.time",
+    "properties.updated",
+    "properties.tz",
+    "properties.url",
+    "properties.detail",
+    "properties.felt",
+    "properties.cdi",
+    "properties.mmi",
+    "properties.alert",
+    "properties.status",
+    "properties.tsunami",
+    "properties.sig",
+    "properties.net",
+    "properties.code",
+    "properties.ids",
+    "properties.sources",
+    "properties.types",
+    "properties.nst",
+    "properties.dmin",
+    "properties.rms",
+    "properties.gap",
+    "properties.magType",
+    "properties.type",
+    "properties.title",
+    "geometry.type",
+    "geometry.coordinates"
+  ],
+  "columns": {
+    "type": {
+      "name": "type",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "id": {
+      "name": "id",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "properties.mag": {
+      "name": "properties.mag",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 1.2,
+      "max_value": 3.6,
+      "distinct_count": 7
+    },
+    "properties.place": {
+      "name": "properties.place",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "properties.time": {
+      "name": "properties.time",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 1794570000000.0,
+      "max_value": 1794570360000.0,
+      "distinct_count": 7
+    },
+    "properties.updated": {
+      "name": "properties.updated",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 1794570100000.0,
+      "max_value": 1794570460000.0,
+      "distinct_count": 7
+    },
+    "properties.tz": {
+      "name": "properties.tz",
+      "inferred_type": "number",
+      "null_count": 7,
+      "total_count": 7,
+      "null_pct": 100.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 0
+    },
+    "properties.url": {
+      "name": "properties.url",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "properties.detail": {
+      "name": "properties.detail",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "properties.felt": {
+      "name": "properties.felt",
+      "inferred_type": "number",
+      "null_count": 7,
+      "total_count": 7,
+      "null_pct": 100.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 0
+    },
+    "properties.cdi": {
+      "name": "properties.cdi",
+      "inferred_type": "number",
+      "null_count": 7,
+      "total_count": 7,
+      "null_pct": 100.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 0
+    },
+    "properties.mmi": {
+      "name": "properties.mmi",
+      "inferred_type": "number",
+      "null_count": 7,
+      "total_count": 7,
+      "null_pct": 100.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 0
+    },
+    "properties.alert": {
+      "name": "properties.alert",
+      "inferred_type": "string",
+      "null_count": 7,
+      "total_count": 7,
+      "null_pct": 100.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 0
+    },
+    "properties.status": {
+      "name": "properties.status",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "properties.tsunami": {
+      "name": "properties.tsunami",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 0.0,
+      "max_value": 0.0,
+      "distinct_count": 1
+    },
+    "properties.sig": {
+      "name": "properties.sig",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 22.0,
+      "max_value": 28.0,
+      "distinct_count": 7
+    },
+    "properties.net": {
+      "name": "properties.net",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "properties.code": {
+      "name": "properties.code",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "properties.ids": {
+      "name": "properties.ids",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "properties.sources": {
+      "name": "properties.sources",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "properties.types": {
+      "name": "properties.types",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "properties.nst": {
+      "name": "properties.nst",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 18.0,
+      "max_value": 24.0,
+      "distinct_count": 7
+    },
+    "properties.dmin": {
+      "name": "properties.dmin",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 0.04,
+      "max_value": 0.04,
+      "distinct_count": 1
+    },
+    "properties.rms": {
+      "name": "properties.rms",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 0.12,
+      "max_value": 0.12,
+      "distinct_count": 1
+    },
+    "properties.gap": {
+      "name": "properties.gap",
+      "inferred_type": "number",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": 65.0,
+      "max_value": 65.0,
+      "distinct_count": 1
+    },
+    "properties.magType": {
+      "name": "properties.magType",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "properties.type": {
+      "name": "properties.type",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "properties.title": {
+      "name": "properties.title",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 7
+    },
+    "geometry.type": {
+      "name": "geometry.type",
+      "inferred_type": "string",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    },
+    "geometry.coordinates": {
+      "name": "geometry.coordinates",
+      "inferred_type": "array",
+      "null_count": 0,
+      "total_count": 7,
+      "null_pct": 0.0,
+      "min_value": null,
+      "max_value": null,
+      "distinct_count": 1
+    }
+  }
+}

@@ -1,0 +1,52 @@
+name: "Upstream Check"
+description: "External data reliability for developers. Monitor JSON APIs and CSV feeds for availability, schema drift, quality, and freshness."
+author: "siddhant3895"
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  config:
+    description: "Path to the upstream-check.yaml configuration file"
+    required: false
+    default: "upstream-check.yaml"
+  source:
+    description: "Optional specific source name to check"
+    required: false
+    default: ""
+  output:
+    description: "Output report format (terminal, json, or markdown)"
+    required: false
+    default: "terminal"
+  python-version:
+    description: "Python version to use for running Upstream Check"
+    required: false
+    default: "3.12"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: "pip"
+
+    - name: Install Upstream Check
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+      run: pip install --disable-pip-version-check "$ACTION_PATH"
+
+    - name: Run Upstream Check
+      shell: bash
+      env:
+        INPUT_CONFIG: ${{ inputs.config }}
+        INPUT_SOURCE: ${{ inputs.source }}
+        INPUT_OUTPUT: ${{ inputs.output }}
+      run: |
+        CMD=("upstream-check" "check" "--config" "$INPUT_CONFIG" "--output" "$INPUT_OUTPUT")
+        if [ -n "$INPUT_SOURCE" ]; then
+          CMD+=("--source" "$INPUT_SOURCE")
+        fi
+        "${CMD[@]}"
