@@ -54,8 +54,6 @@ from upstream_check.core.types import (
     resolve_safe_baseline_path,
     resolve_source_target,
     safe_append_text_verified,
-    safe_read_regular_file_bytes,
-    verify_open_fd_safe,
     to_float,
     types_compatible,
     validate_source_name,
@@ -1506,7 +1504,7 @@ elif args[:2] == ["issue", "close"]:
 
     def test_csv_ragged_row_widths_and_all_null_columns_fail_schema(self) -> None:
         ragged_csv = "id,value\n1,ok,UNEXPECTED\n2,ok\n"
-        headers, rows, dup_headers, malformed = parse_csv_content(ragged_csv)
+        headers, _rows, _dup_headers, malformed = parse_csv_content(ragged_csv)
         self.assertEqual(len(malformed), 1)
         self.assertEqual(malformed[0], (2, 2, 3))
 
@@ -2939,7 +2937,6 @@ RESULT: FAILED
         """Verify all 7 mandatory v0.2.12 TOCTOU and descriptor-verification scenarios."""
         runner = CliRunner()
         cli_app_mod = sys.modules["upstream_check.cli.app"]
-        types_mod = sys.modules["upstream_check.core.types"]
 
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp).resolve()

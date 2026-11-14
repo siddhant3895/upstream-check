@@ -15,12 +15,12 @@ from pathlib import Path
 from typing import Any, Iterable, List, Optional, Sequence, Tuple, Union
 from urllib.parse import parse_qsl, unquote, urlencode, urlsplit, urlunsplit
 
+from upstream_check.core.models import InferredType
+
 try:
     import fcntl
 except ImportError:  # pragma: no cover - Windows
     fcntl = None  # type: ignore[assignment]
-
-from upstream_check.core.models import InferredType
 
 NULL_STRINGS = {"", "null", "none", "na", "n/a", "nan", "nil", "<na>"}
 BOOL_STRINGS = {"true", "false"}

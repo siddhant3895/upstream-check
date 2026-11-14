@@ -44,7 +44,7 @@ def main() -> None:
         with tempfile.TemporaryDirectory(prefix="upstream_check_demo_") as tmp:
             tmp_path = Path(tmp)
             print("=== STEP 1: Initialize Baseline from Healthy Upstream Feed ===")
-            cfg_dict, baseline, cfg_file, _ = initialize_source(
+            cfg_dict, _baseline, cfg_file, _ = initialize_source(
                 url=healthy_url,
                 name="air-quality",
                 fmt="csv",
